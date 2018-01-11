@@ -78,7 +78,9 @@ def params_along_orbit(orbit, ts, pot=MWPotential2014, delta=0.375):
     zs = orbit.z(ts)
     vzs = orbit.vz(ts)
     phis = orbit.phi(ts)
-    aAS= actionAngleStaeckel(pot=pot,delta=delta) # for example
-    es, zms, rps, ras = aAS.EccZmaxRperiRap(Rs,vRs,vTs,zs,vzs,phis)
+    aAS= actionAngleStaeckel(pot=pot,delta=delta) 
+    if delta == 'along':
+        delta = estimateDeltaStaeckel(pot, Rs, zs, no_median=True)
+    es, zms, rps, ras = aAS.EccZmaxRperiRap(Rs,vRs,vTs,zs,vzs,phis,delta=delta)
     return es, zms, rps, ras
 
