@@ -28,6 +28,27 @@ def orbit_at_E_L(logE, logL, x=4./5., pot=MWPotential2014):
     o= Orbit([Rc,vR,(10**logL)/Rc,0.,vz,0.])
     return o
 
+def orbits_on_grid(logE_range=[-2.,0.], logL_range=[-2.,1.], nE = 101, nL = 101, x = 4./5., pot= MWPotential2014):
+    '''
+    generate initial phase-space points for a grid of orbits in a given potential
+    '''
+    grid = np.empty([nE,nL,6])
+    logEs = np.linspace(logE_range[0], logE_range[1], nE)
+    logLs = np.linspace(logL_range[0], logL_range[1], nL)
+    Einf= evalPot(pot,10.**12.,0.)
+    for j in range(nL):
+        Rc = rl(pot, 10**logLs[j])
+        Ec= evalPot(pot,Rc,0.)+0.5*(10**logLs[j])**2./Rc**2.
+        Es= Ec+(Einf-Ec)*10.**logEs
+        for i in range(nE):
+            Er= 2.*(Es[i]-Ec) 
+            vR= numpy.sqrt(x*Er)
+            vz= numpy.sqrt((1-x)*Er)
+            grid[i,j] = [Rc,vR,(10**logLs[j])/Rc,0.,vz,0.]
+    return grid
+    
+   
+
 def estimate_delta(orbit, ts= numpy.linspace(0.,20.,1001), pot=MWPotential2014):
     '''
     estimate delta for a given orbit instance
