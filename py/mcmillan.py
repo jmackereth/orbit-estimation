@@ -1,5 +1,6 @@
 import numpy as np
-from galpy.potential import DiskSCFPotential, NFWPotential
+from galpy.potential import DiskSCFPotential, NFWPotential, \
+    SCFPotential, scf_compute_coeffs_axi
 from galpy.util import bovy_conversion
 
 ro = 8.21
@@ -120,11 +121,15 @@ hzdict = [{'type':'sech2', 'h':zd_HI},
           {'type':'exp', 'h':0.9/ro}]
 
 #generate separate disk and halo potential - and combined potential
-McMillan_disk = DiskSCFPotential(dens=lambda R,z: bulge_gas_dens(R,z), Sigma=sigmadict, hz=hzdict, a=1, N=20, L=20)
-McMillan_halo = NFWPotential(amp = rho0_halo*(4*np.pi*rh**3), a = rh)
-McMillan2017 = [DiskSCFPotential(dens=lambda R,z: bulge_gas_dens(R,z), Sigma=sigmadict, hz=hzdict, a=1, N=20, L=20),
-                NFWPotential(amp = rho0_halo*(4*np.pi*rh**3), a = rh)]
-
+McMillan_bulge=\
+    SCFPotential(Acos=scf_compute_coeffs_axi(bulge_dens,20,10,a=0.1)[0],
+                 a=0.1,ro=ro,vo=vo)
+McMillan_disk = DiskSCFPotential(dens=lambda R,z: gas_stellar_dens(R,z),
+                                 Sigma=sigmadict, hz=hzdict,
+                                 a=2.5, N=30, L=30,ro=ro,vo=vo)
+McMillan_halo = NFWPotential(amp = rho0_halo*(4*np.pi*rh**3),
+                             a = rh,ro=ro,vo=vo)
+McMillan2017 = [McMillan_disk,McMillan_halo,McMillan_bulge]
 
 
                                                             
