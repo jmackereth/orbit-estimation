@@ -18,7 +18,7 @@ def orbit_at_E_L(logE, logL, x=4./5., pot=MWPotential2014):
     return an orbit instance at a given energy and angular momentum in a given
     potential
     '''
-    Einf= evalPot(pot,10.**12.,0.)
+    Einf= evalPot(pot,10.**5.,0.)
     Rc= rl(pot,10**logL)
     Ec= evalPot(pot,Rc,0.)+0.5*(10**logL)**2./Rc**2.
     Es= Ec+(Einf-Ec)*10.**logE
@@ -46,14 +46,34 @@ def orbits_on_grid(logE_range=[-2.,0.], logL_range=[-2.,1.], nE = 101, nL = 101,
             vz= numpy.sqrt((1-x)*Er)
             grid[i,j] = [Rc,vR,(10**logLs[j])/Rc,0.,vz,0.]
     return grid
-    
-   
+
+def integrate_and_compare(orbit, pot=MWPotential2014, deltapot=MWPotential2014, ts= None,return_delta=False):
+    delta = estimate_delta(orbit, pot=deltapot, ts=np.linspace(0.,20.,30))
+    if not np.isfinite(delta):
+        print('estimateDelta returned NaN - assuming 0.4')
+        delta = 0.4
+    if ts is None:
+        Tp = np.fabs(azimuthal_period(orbit, pot=pot, delta=delta))
+        if not np.isfinite(Tp):
+            if return_delta:
+                return [np.nan, np.nan, np.nan, np.nan], [np.nan, np.nan, np.nan, np.nan], np.nan
+            return [np.nan, np.nan, np.nan, np.nan], [np.nan, np.nan, np.nan, np.nan]
+    aAS = actionAngleStaeckel(pot=pot, delta=delta)
+    ana_param = aAS.EccZmaxRperiRap(orbit)
+    if ts is None:
+        ts = np.arange(0.,20.*Tp,0.01)
+    orbit.integrate(ts,pot)
+    int_param = [orbit.e(), orbit.zmax(), orbit.rperi(), orbit.rap()]
+    if return_delta:
+        return ana_param, int_param, delta
+    return ana_param, int_param
 
 def estimate_delta(orbit, ts= numpy.linspace(0.,20.,1001), pot=MWPotential2014):
     '''
     estimate delta for a given orbit instance
     '''
     orbit.integrate(ts,pot,method='symplec4_c')
+      
     return estimateDeltaStaeckel(pot, orbit.R(ts),orbit.z(ts))
 
 def azimuthal_period(orbit, pot=MWPotential2014, delta=0.375):
