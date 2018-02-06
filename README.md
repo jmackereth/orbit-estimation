@@ -1,13 +1,13 @@
 # orbit-estimation
 
 Code for testing and evaluating the Stäckel approximation method for estimating orbit parameters in galactic potentials, as 
-found in [Mackereth & Bovy (2018, in prep)](arxiv.org). 
+described in [Mackereth & Bovy (2018, in prep)](arxiv.org). The method itself is implemented in [galpy](https://github.com/jobovy/galpy); see galpy's documentation for instructions on how to use it.
 
 ## Introduction
 
 While action-angle variables are now an essential tool in Galactic dynamics, orbital parameters such as eccentricity and maximum vertical excursion are still useful tools for understanding the dynamics and evolution of the Galaxy. The computation of these parameters for galactic potentials has usually required computationally expensive orbit integration. Here, we demonstrate and test a new method for their estimation using the Stäckel approximation. The method relies on the approximation of the Galactic potential as a Stäckel potential, in a prolate confocal coordinate system, under which the vertical and horizontal motions decouple. By solving the Hamilton Jacobi equations at the turning points of the horizontal and vertical motions, it is possible to determine the spatial boundary of the orbit, and hence calculate the desired orbit parameters.
 
-This repo includes all the code to generate the plots and tests in the paper, as well as some extra explorations into the method and its application to observational data. Running the code requires the usual `scipy` ecosystem packages, `astropy`, Jo Bovy's [`gaia_tools`](https://github.com/jobovy/gaia_tools) and a full installation (including the C extensions) of `galpy`.
+This repo includes all the code to generate the plots and tests in the paper, as well as some extra explorations into the method and its application to observational data. Running the code requires the usual `scipy` ecosystem packages, `astropy`, Jo Bovy's [`gaia_tools`](https://github.com/jobovy/gaia_tools) and a full installation (including the C extensions) of [`galpy`](https://github.com/jobovy/galpy).
 
 ## Main Code
 
