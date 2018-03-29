@@ -1,7 +1,7 @@
 # orbit-estimation
 
 Code for testing and evaluating the Stäckel approximation method for estimating orbit parameters in galactic potentials, as 
-described in [Mackereth & Bovy (2018, in prep)](arxiv.org). The method itself is implemented in [galpy](https://github.com/jobovy/galpy); see galpy's documentation for instructions on how to use it.
+described in [Mackereth & Bovy (2018, in prep)](https://arxiv.org/abs/1802.02592v1). The method itself is implemented in [galpy](https://github.com/jobovy/galpy); see galpy's documentation for instructions on how to use it.
 
 ## Introduction
 
